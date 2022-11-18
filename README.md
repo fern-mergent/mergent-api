@@ -1,23 +1,22 @@
-# {Company} API
+# Mergent API
 
 Tagging a release on this repository will update the:
 
-- [TypeScript SDK repo](https://github.com/fern-{company}/{company}-node)
-- [Java SDK repo](https://github.com/fern-{company}/{company}-java)
-- [OpenAPI description repo](https://github.com/fern-{company}/{company}-openapi)
-- [Postman collection repo](https://github.com/fern-{company}/{company}-postman)
+- [TypeScript SDK repo](https://github.com/fern-mergent/mergent-node)
+- [Java SDK repo](https://github.com/fern-mergent/mergent-java)
+- [OpenAPI description repo](https://github.com/fern-mergent/mergent-openapi)
 - _More SDKs to come..._
 
 ## What is in this repository?
 
 This repository contains
 
-- {Company}'s Fern API Definition which lives in the [definition](./fern/api/definition/) folder
+- Mergent's Fern API Definition which lives in the [definition](./fern/api/definition/) folder
 - Generators (see [generators.yml](./fern/api/generators.yml))
 
 ## What is in the API Definition?
 
-The API Definition contains information about what endpoints, types, and errors are used in the API. The definition is broken into smaller files such as [{TODO}.yml](fern/api/definition/{TODO}.yml) and [{TODO}.yml](fern/api/definition/{TODO}.yml).
+The API Definition contains information about what endpoints, types, and errors are used in the API. The definition is broken into smaller files such as [task.yml](fern/api/definition/task.yml).
 
 In order to make sure that the definition is valid, you can use the Fern CLI.
 
