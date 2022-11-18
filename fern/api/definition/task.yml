@@ -1,0 +1,119 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fern-api/fern/main/fern.schema.json
+
+services:
+  http:
+    TaskService:
+      base-path: /tasks
+      auth: true
+      endpoints:
+        create:
+          method: POST
+          path: /
+          request: CreateTaskRequest
+          response: Task
+        get:
+          method: GET
+          path: /{task_id}
+          path-parameters:
+            task_id: TaskId
+          response: Task
+        update:
+          method: PATCH
+          path: /{task_id}
+          path-parameters:
+            task_id: TaskId
+          request: CreateTaskRequest
+          response: Task
+        delete:
+          method: DELETE
+          path: /{task_id}
+          path-parameters:
+            task_id: TaskId
+        run:
+          docs: Reschedules a queued Task to be run immediately.
+          method: POST
+          path: /{task_id}/run
+          path-parameters:
+            task_id: TaskId
+          response: Task
+        batchCreate:
+          docs: |
+            A maximum of 100 Tasks are accepted per request.
+            This operation is atomic: it will succeed for all Tasks or fail for all Tasks; there is no partial success.
+            This endpoint is in beta and may change at any time without notice.
+          method: POST
+          path: /batch-create
+          request: list<CreateTaskRequest>
+          response: list<Task>
+        batchDelete:
+          method: POST
+          path: /batch-delete
+          request: list<TaskId>
+
+types:
+  CreateTaskRequest:
+    properties:
+      name:
+        docs: An optional name of the Task. This string must not contain more than 100 characters.
+        type: optional<string>
+        availability: 
+          status: deprecated
+          message: To be removed on November 30, 2022.
+      request: HttpRequest
+      scheduled_for:
+        docs: |
+          The ISO 8601 timestamp for when the Task is scheduled to be executed. Example: "2021-10-01T15:53:05Z".
+          When not present, the Task will be scheduled for immediate execution.
+        type: optional<datetime>
+      delay:
+        docs: |
+          The ISO 8601 duration for the time to wait before the Task is executed. Example: "PT1M" for a delay of 1 minute.
+          When both `delay` and `scheduled_for` are present, `delay` will be added to `scheduled_for`.
+        type: string
+  
+  HttpRequest:
+    properties:
+      url:
+        docs: |
+          The URL that the POST request will be sent to.
+          For localhost development, use something like ngrok to get a publicly accessible URL for your local service. See https://docs.mergent.co for more info.
+        type: string
+      headers:
+        docs: The headers that will accompany any Task's HTTP request. For example, you can use this to set Content-Type to "application/json" or "application/octet-stream".
+        type: optional<map<string, string>>
+      body:
+        docs: The HTTP request body
+        type: optional<string>
+
+  Task:
+    properties:
+      id:
+        docs: A unique ID assigned upon creation.
+        type: TaskId
+      name:
+        docs: The name of the task.
+        type: optional<string>
+        availability: 
+          status: deprecated
+          message: To be removed on November 30, 2022.
+      status:
+        docs: The status of this Task.
+        type: TaskStatus
+      request: HttpRequest
+      scheduled_for:
+        docs: |
+          The ISO 8601 timestamp for when the Task is scheduled to be executed. Example: "2021-10-01T15:53:05Z".
+          When not present, the Task has been scheduled for immediate execution.
+        type: optional<datetime>
+      created_at:
+        docs: The ISO 8601 timestamp representing when the object was created.
+        type: datetime
+  
+  TaskId: string
+
+  TaskStatus:
+    enum:
+      - queued
+      - working
+      - success
+      - failure

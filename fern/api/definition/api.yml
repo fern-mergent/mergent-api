@@ -1,10 +1,5 @@
 name: api
 auth: bearer
 environments:
-  Production:
-    url: 
-    docs:
-  Sandbox:
-    url:
-    docs:
+  Production: https://api.mergent.co/v2
 default-environment: Production
