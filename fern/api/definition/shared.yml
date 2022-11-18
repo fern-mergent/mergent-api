@@ -1,0 +1,21 @@
+types:
+  HttpRequest:
+    properties:
+      url:
+        docs: |
+          The URL that the POST request will be sent to.
+
+          For localhost development, use something like ngrok to get a publicly
+          accessible URL for your local service. See https://docs.mergent.co for
+          more info.
+        type: string
+      headers:
+        docs: |
+          The headers that will accompany any Task's HTTP request.
+          
+          For example, you can use this to set Content-Type to
+          "application/json" or "application/octet-stream".
+        type: optional<map<string, string>>
+      body:
+        docs: The HTTP request body
+        type: optional<string>

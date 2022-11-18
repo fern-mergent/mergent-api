@@ -1,0 +1,112 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fern-api/fern/main/fern.schema.json
+
+imports:
+  shared: shared.yml
+  task: task.yml
+
+services:
+  http:
+    ScheduleService:
+      base-path: /schedules
+      auth: true
+      endpoints:
+        create:
+          method: POST
+          path: /
+          request: CreateScheduleRequest
+          response: Schedule
+        get:
+          method: GET
+          path: /{schedule_id}
+          path-parameters:
+            schedule_id: ScheduleId
+          response: Schedule
+        update:
+          method: PATCH
+          path: /{schedule_id}
+          path-parameters:
+            schedule_id: ScheduleId
+          request: CreateScheduleRequest
+          response: Schedule
+        delete:
+          method: DELETE
+          path: /{schedule_id}
+          path-parameters:
+            schedule_id: ScheduleId
+        getAll:
+          method: GET
+          path: /
+          response: Schedule
+        getSchedules:
+          method: GET
+          path: /{schedule_id}/schedules
+          path-parameters:
+            schedule_id: ScheduleId
+          response: list<task.Task>
+
+types:
+  CreateScheduleRequest:
+    properties:
+      name:
+        docs: |
+          An optional name of the Schedule. This string must not contain more
+          than 100 characters.
+        type: optional<string>
+        availability: 
+          status: deprecated
+          message: To be removed on November 30, 2022.
+      description:
+        docs: |
+          An optional description of the Schedule. This string must not contain
+          more than 500 characters.
+        type: optional<string>
+      cron:
+        docs: |
+          A [cron expression](https://crontab.guru/examples.html) describing the
+          Schedule on which Schedules will run (UTC).
+
+          Note: execution n + 1 of a Schedule will not begin until execution n has
+          completed successfully.
+
+          You must pass either `cron` or `rrule`` when creating a new Schedule.
+        type: optional<string>
+      rrule:
+        docs: |
+          An [iCal RRule expression](https://icalendar.org/iCalendar-RFC-5545/3-8-5-3-recurrence-rule.html)
+          describing the Schedule on which Schedules will run (UTC). The time of
+          Schedule creation will be used as the start of the recurrence interval
+          (i.e. DTSTART).
+
+          Note: execution n + 1 of a Schedule will not begin until execution n has
+          completed successfully.
+
+          You must pass either `cron` or `rrule`` when creating a new Schedule.
+        type: optional<string>
+      dstart:
+        docs: |
+            The [ISO 8601 timestamp](https://en.wikipedia.org/wiki/ISO_8601#Combined_date_and_time_representations)
+            denoting the start of an RRULE schedule.
+
+            Example: "2021-10-01T15:53:05Z".
+            
+            When not set, it will be set to the current time, and the first Schedule will be scheduled immediately.
+            Ignored for `cron`-type Schedules.
+        type: optional<string>
+      paused:
+        docs: If `true`, the Schedule will be paused immediately. If `false`, a paused Schedule will be resumed.
+        type: boolean
+      request: shared.HttpRequest
+
+  Schedule:
+    extends: CreateScheduleRequest
+    properties:
+      id:
+        docs: A unique ID assigned upon creation.
+        type: ScheduleId
+      created_at:
+        docs: |
+          The [ISO 8601 timestamp](https://en.wikipedia.org/wiki/ISO_8601#Combined_date_and_time_representations)
+          representing when the schedule was created.
+        type: datetime
+  
+  ScheduleId: string
