@@ -3,7 +3,6 @@
 Tagging a release on this repository will update the:
 
 - [TypeScript SDK repo](https://github.com/fern-mergent/mergent-node)
-- [Java SDK repo](https://github.com/fern-mergent/mergent-java)
 - [OpenAPI description repo](https://github.com/fern-mergent/mergent-openapi)
 - _More SDKs to come..._
 
