@@ -86,7 +86,7 @@ types:
           
           When both `delay` and `scheduled_for` are present, `delay` will be
           added to `scheduled_for`.
-        type: string
+        type: optional<string>
   
   Task:
     extends: CreateTaskRequest
